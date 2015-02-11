@@ -43,7 +43,10 @@ confirm() ->
 
     lager:info("Setting up some listerners"),
 
-    %% TODO: Now make sure they are working
+    %% TODO: Each node should have itself as leader
+
+    [?assertNotEqual({ok, Node},
+                     rt_governor:get_cluster_leader(Node)) || Node <- Nodes],
 
     lager:info("joining Node 2 to the cluster... It takes two to make a thing go right"),
 
@@ -112,16 +115,17 @@ confirm() ->
 
 wait_and_validate(Nodes) ->
     wait_and_validate(Nodes, Nodes).
-wait_and_validate(RingNodes, UpNodes) ->
+wait_and_validate(RingNodes, [Node1 | _] = UpNodes) ->
     lager:info("Wait until all nodes are ready and there are no pending changes"),
     ?assertEqual(ok, rt:wait_until_nodes_ready(UpNodes)),
     ?assertEqual(ok, rt:wait_until_all_members(UpNodes)),
     ?assertEqual(ok, rt:wait_until_no_pending_changes(UpNodes)),
     lager:info("Ensure each node owns a portion of the ring"),
     [rt:wait_until_owners_according_to(Node, RingNodes) || Node <- UpNodes],
-    [rt:wait_for_service(Node, rt:config(rc_services, [riak_kv])) || Node <- UpNodes],
+    [rt:wait_for_service(Node, rt:config(rc_services, [riak_governor])) || Node <- UpNodes],
     lager:info("Verify that you got much data... (this is how we do it)"),
+    {ok, Leader} = rt_governor:get_cluster_leader(Node1),
     %% TODO here goes a test:
-    %% [?assertNotEqual({ok, []},
-    %%              rt_howl:listeners(Node, ?CHANNEL1)) || Node <- UpNodes],
+    [?assertNotEqual({ok, Leader},
+                     rt_howl:listeners(Node, ?CHANNEL1)) || Node <- UpNodes],
     done.
