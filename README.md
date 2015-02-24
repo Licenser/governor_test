@@ -14,6 +14,6 @@ riak_test
 * clone governor_test
 * `make` (twice!)
 * `cp governor_test.config ~/.riak_test.config` (or add the `riak_governor` section in the existing one)
-* run: `./governor_test -v -t basic_command_line -c rtdev`
+* run: `./governor_test -v -t basic_command_line -c riak_governor`
 * profit!
 

@@ -1,6 +1,6 @@
 .PHONY: deps
 
-CONFIG = rtdev
+CONFIG = riak_governor
 
 APPS = kernel stdlib sasl erts ssl tools os_mon runtime_tools crypto inets \
 	xmerl webtool eunit syntax_tools compiler hipe mnesia public_key \
@@ -29,7 +29,7 @@ distclean: clean
 	@rm -rf governor_test deps
 
 test:
-	./governor_test -c $(CONFIG) -v -b none $(shell cd tests/; ls -1 *.erl | sed 's/.erl$$//' | awk '{print "-t " $$1}';)
+	./governor_test -c $(CONFIG) -v $(shell cd tests/; ls -1 *.erl | sed 's/.erl$$//' | awk '{print "-t " $$1}';)
 ##################
 # Dialyzer targets
 ##################
