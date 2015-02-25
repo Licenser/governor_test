@@ -1,6 +1,13 @@
 Getting started
 ===============
 
+Simplified setup:
+
+```bash
+./init.sh <path to riak_govenor> <target for riak_test deployment>
+```
+
+
 riak_governor
 -------------
 
@@ -14,7 +21,7 @@ riak_governor
   + Change 'gov[123]@127.0.0.1' to  'dev[123]@127.0.0.1' respectively
 * `make devrel` on riak_governor
 * copy dev releases to a sandbox
-```
+```bash
 mkdir master
 cp -rf dev master/dev
 cd master/dev
